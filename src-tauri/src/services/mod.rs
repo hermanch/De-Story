@@ -3,7 +3,6 @@ pub mod elevenlabs;
 pub mod flow2api;
 pub mod gemini;
 pub mod generation;
-pub mod higgsfield;
 pub mod http;
 pub mod json;
 pub mod llm;

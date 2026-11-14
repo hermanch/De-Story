@@ -1,11 +1,9 @@
 import { cx } from './cx'
 
 /**
- * Brand marks for Higgsfield's model families (from LobeHub Icons, MIT; the marks belong to their owners).
- * Families without their own mark use their maker's: Alibaba for Wan, HappyHorse and Z-Image, and
- * Higgsfield for its in-house Soul and Cinema Studio.
+ * Brand marks for model families (from LobeHub Icons, MIT; the marks belong to their owners).
  */
-const FILES = import.meta.glob(['../assets/models/*.svg', '../assets/providers/higgsfield.png', '../assets/providers/gemini.svg'], { eager: true, import: 'default' }) as Record<string, string>
+const FILES = import.meta.glob(['../assets/models/*.svg', '../assets/providers/gemini.svg'], { eager: true, import: 'default' }) as Record<string, string>
 const file = (path: string): string | undefined => FILES[`../assets/${path}`]
 
 const FAMILY_LOGO: Record<string, { src: string; bg: string; inset: number }> = {
@@ -13,8 +11,6 @@ const FAMILY_LOGO: Record<string, { src: string; bg: string; inset: number }> = 
   Veo: { src: 'providers/gemini.svg', bg: '#FFFFFF', inset: 0.18 },
   'Nano Banana': { src: 'providers/gemini.svg', bg: '#FFFFFF', inset: 0.18 },
   'GPT Image': { src: 'models/openai.svg', bg: '#FFFFFF', inset: 0.2 },
-  Soul: { src: 'providers/higgsfield.png', bg: '#D1FE17', inset: 0 },
-  'Cinema Studio': { src: 'providers/higgsfield.png', bg: '#D1FE17', inset: 0 },
   Grok: { src: 'models/grok.svg', bg: '#FFFFFF', inset: 0.2 },
   Recraft: { src: 'models/recraft.svg', bg: '#FFFFFF', inset: 0.22 },
   Ideogram: { src: 'models/ideogram.svg', bg: '#FFFFFF', inset: 0.2 },

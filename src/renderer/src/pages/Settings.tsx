@@ -10,7 +10,6 @@ import {
   EyeOff,
   Film,
   FolderOpen,
-  Image as ImageIcon,
   Info,
   KeyRound,
   Mic,
@@ -20,7 +19,6 @@ import {
   Trash2
 } from 'lucide-react'
 import { FLOW_IMAGE_MODELS, FLOW_VIDEO_MODELS } from '@shared/flow'
-import { HF_IMAGE_MODELS, HF_VIDEO_MODELS } from '@shared/higgsfield'
 import { LANGUAGES, LLM_PROVIDERS } from '@shared/models'
 import type {
   ApiProvider,
@@ -818,48 +816,6 @@ function TtsSection({ settings, statusOf, onChanged, onSettings }: { settings: A
   )
 }
 
-function HiggsfieldSection({ status, onChanged }: { status?: KeyStatus; onChanged: () => void }) {
-  return (
-    <>
-      <SectionTitle icon={<ImageIcon className="size-5" />} title="Gambar dan video" sub="Higgsfield membuat gambar klip, lembar karakter, dan video AI." />
-      <Card>
-        <div className="flex items-center gap-3">
-          <ProviderLogo id="higgsfield" />
-          <div className="flex flex-1 flex-col">
-            <span className="text-base font-bold">Higgsfield</span>
-            <span className="text-[13px] text-ink-2">GPT Image 2.5, Kling, Seedance, dan model lain dari akun Higgsfield kamu</span>
-          </div>
-          <StatusBadge status={status} />
-        </div>
-        <KeyForm
-          provider="higgsfield"
-          name="Higgsfield"
-          status={status}
-          placeholder="Tempel hasil tombol Copy API key"
-          hint={
-            <>
-              Di console Higgsfield, buka API Keys lalu klik <strong className="text-ink">Copy API key</strong> dan tempel di sini. Formatnya{' '}
-              <code className="rounded bg-sand px-1 font-mono text-xs">KEY_ID:KEY_SECRET</code>. Kalau kamu memegang Key ID dan Secret terpisah, gabungkan
-              dengan titik dua.
-            </>
-          }
-          help="Kunci dicek dengan permintaan estimasi biaya, tanpa memakai kredit."
-          link="https://higgsfield.ai/s/higgsfield-api-yt-bangtutorial-lPMrHK"
-          linkLabel="Buka console Higgsfield"
-          onChanged={onChanged}
-        />
-        <p className="flex items-start gap-2.5 border-t border-dashed border-line pt-4 text-[13px] leading-relaxed text-ink-2">
-          <Film className="mt-0.5 size-4 shrink-0" />
-          <span>
-            Semua {HF_IMAGE_MODELS.length} model gambar dan {HF_VIDEO_MODELS.length} model video Higgsfield bisa dipakai. Modelnya dipilih per proyek
-            di langkah <strong className="text-ink">Ide cerita</strong>, bagian Model AI.
-          </span>
-        </p>
-      </Card>
-    </>
-  )
-}
-
 function Flow2ApiSection({
   settings,
   status,
@@ -875,8 +831,8 @@ function Flow2ApiSection({
     <>
       <SectionTitle
         icon={<Sparkles className="size-5" />}
-        title="Google Flow (Flow2API)"
-        sub="Penyedia alternatif mandiri untuk generate gambar dan video AI gratis melalui gateway flow2api."
+        title="Gambar dan video (Google Flow)"
+        sub="Generate gambar, lembar karakter, dan video AI melalui Google Flow (Flow2API)."
       />
       <Card>
         <div className="flex items-center gap-3">
@@ -908,7 +864,7 @@ function Flow2ApiSection({
               >
                 TheSmallHanCat/flow2api
               </a>{' '}
-              memungkinkan generate gambar Nano Banana dan video Google Veo 3.1 langsung tanpa memotong kredit Higgsfield.
+              memungkinkan generate gambar Nano Banana dan video Google Veo 3.1 tanpa biaya per generate.
             </>
           }
           link="https://github.com/TheSmallHanCat/flow2api"
@@ -1343,8 +1299,7 @@ export function Settings() {
                 </div>
                 <LlmSection settings={settings} statusOf={statusOf} onChanged={reload} onSettings={setSettings} />
                 <TtsSection settings={settings} statusOf={statusOf} onChanged={reload} onSettings={setSettings} />
-                <HiggsfieldSection status={statusOf('higgsfield')} onChanged={reload} />
-                <Flow2ApiSection settings={settings} status={statusOf('flow2api')} onChanged={reload} onSettings={setSettings} />
+                                <Flow2ApiSection settings={settings} status={statusOf('flow2api')} onChanged={reload} onSettings={setSettings} />
                 <WhisperSection settings={settings} onSettings={setSettings} />
               </>
             )}
@@ -1406,7 +1361,7 @@ export function Settings() {
                   terpasang di folder aplikasi.
                 </p>
                 <p>
-                  Logo Gemini, OpenRouter, Groq, ElevenLabs, dan Higgsfield adalah merek milik pemiliknya masing-masing, dipakai hanya untuk menandai
+                  Logo Gemini, OpenRouter, Groq, ElevenLabs, dan Google Flow adalah merek milik pemiliknya masing-masing, dipakai hanya untuk menandai
                   layanan yang terhubung. Ikon penyedia berasal dari LobeHub Icons (lisensi MIT).
                 </p>
               </section>

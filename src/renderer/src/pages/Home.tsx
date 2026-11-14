@@ -96,8 +96,8 @@ export function Home() {
       return !!k?.configured && k.lastOk !== false
     }
     const issues: { what: string; blocks: string }[] = []
-    if (!ok('higgsfield') && !ok('flow2api')) {
-      issues.push({ what: 'kunci Higgsfield atau Google Flow (Flow2API)', blocks: 'gambar & video' })
+    if (!ok('flow2api')) {
+      issues.push({ what: 'kunci Google Flow (Flow2API)', blocks: 'gambar & video' })
     }
     const llm = appSettings.llmProvider
     if (!ok(llm)) issues.push({ what: `kunci ${llmName(llm)}`, blocks: 'cerita' })

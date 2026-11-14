@@ -49,9 +49,7 @@ Hasil akhirnya dapat ditinjau langsung di editor multi-track internal dan dieksp
 ### 2. 🎨 Generator Visual AI & Lembar Karakter (Storyboard)
 - **12+ Preset Gaya Visual Terintegrasi:** Stickman, Anime, 3D Pixar Animation, Archival/Vintage, Comic Book, Claymation, Pixel Art, Watercolor, dll.
 - **Konsistensi Karakter (Character Sheet):** AI menghasilkan referensi visual karakter utama agar wajah dan pakaian tetap konsisten di setiap adegan.
-- **Dukungan Generator Ganda:**
-  - **Higgsfield AI** untuk visual sinematik tinggi.
-  - **Google Flow (Flow2API)** untuk generasi gambar Nano Banana dan video Veo 3.1.
+- **Google Flow (Flow2API):** Satu penyedia untuk gambar Nano Banana dan video Veo 3.1.
 
 ### 3. 🎙️ Narasi Suara Alami (Human-like TTS)
 - **Google Gemini TTS:** Akses ke 30+ profil suara ekspresif dengan dukungan rotasi pool multi-key otomatis untuk menghindari kuota rate-limit.
@@ -157,7 +155,7 @@ Repositori ini telah dilengkapi dengan workflow CI/CD GitHub Actions di [`.githu
 3. Pada tab **Layanan AI dan kunci**, lengkapi kredensial yang dibutuhkan:
    - **Google Gemini API Key:** (Bisa memasukkan beberapa kunci sekaligus dipisahkan koma atau baris baru untuk rotasi otomatis).
    - **ElevenLabs API Key:** (Opsional, jika ingin narator ElevenLabs).
-   - **Higgsfield AI Key / Google Flow:** Untuk generator visual adegan.
+   - **Google Flow (Flow2API):** Untuk generator visual adegan (gambar & video).
 4. Klik **Periksa** untuk memastikan status kunci aktif (tercentang hijau).
 
 ### Langkah 1: Merumuskan Ide Cerita
@@ -242,7 +240,7 @@ de-story/
 │   │   ├── commands/              # Handler IPC Commands (Proyek, Ekspor, Settings)
 │   │   ├── db/                    # SQLite engine (rusqlite) & migrasi schema
 │   │   ├── media/                 # FFmpeg video exporter & engine subtitle ASS
-│   │   ├── services/              # Integrasi AI (Gemini, ElevenLabs, Higgsfield, LLM)
+│   │   ├── services/              # Integrasi AI (Gemini, ElevenLabs, Google Flow, LLM)
 │   │   ├── speech/                # Whisper CPP engine & Needleman-Wunsch alignment
 │   │   ├── paths.rs               # Manajemen folder data pengguna (%APPDATA%\De Story)
 │   │   ├── protocol.rs            # Custom protocol studio:// (HTTP 206 Range Streaming)

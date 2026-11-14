@@ -6,14 +6,11 @@ use tauri::{AppHandle, Emitter};
 use tokio::sync::Semaphore;
 use tokio_util::sync::CancellationToken;
 
-use crate::db::repo::{get_job, update_job};
+use crate::db::repo::update_job;
 use crate::db::DbPool;
-use crate::services::higgsfield::cancel_request;
 
 pub enum QueueName {
-    Higgsfield,
-    /// Character sheets. A queue of their own so sheet jobs are never starved
-    /// by clip jobs that hold Higgsfield permits while waiting for sheets.
+    /// Image, video, and character sheet jobs — all served by Flow2API.
     Sheet,
     Tts,
     Whisper,
@@ -71,7 +68,6 @@ fn panic_text(join_err: tokio::task::JoinError) -> String {
 }
 
 pub struct JobManager {
-    sem_hf: Arc<Semaphore>,
     sem_sheet: Arc<Semaphore>,
     sem_tts: Arc<Semaphore>,
     sem_whisper: Arc<Semaphore>,
@@ -84,8 +80,7 @@ pub struct JobManager {
 impl JobManager {
     pub fn new(db: DbPool, app: AppHandle) -> Self {
         Self {
-            sem_hf: Arc::new(Semaphore::new(3)),
-            sem_sheet: Arc::new(Semaphore::new(2)),
+            sem_sheet: Arc::new(Semaphore::new(3)),
             sem_tts: Arc::new(Semaphore::new(2)),
             sem_whisper: Arc::new(Semaphore::new(1)),
             sem_export: Arc::new(Semaphore::new(1)),
@@ -104,7 +99,6 @@ impl JobManager {
         self.tokens.lock().unwrap().insert(job_id.to_string(), token.clone());
 
         let sem = match queue {
-            QueueName::Higgsfield => self.sem_hf.clone(),
             QueueName::Sheet => self.sem_sheet.clone(),
             QueueName::Tts => self.sem_tts.clone(),
             QueueName::Whisper => self.sem_whisper.clone(),
@@ -186,23 +180,7 @@ impl JobManager {
         });
     }
 
-    pub async fn cancel_job(&self, job_id: &str, hf_key: Option<&str>) {
-        let job = {
-            let conn = self.db.lock().unwrap();
-            get_job(&conn, job_id)
-        };
-
-        if let Some(j) = job {
-            let remote_id = j.get("remoteId").and_then(|x| x.as_str());
-            let provider = j.get("provider").and_then(|x| x.as_str()).unwrap_or("");
-
-            if provider == "higgsfield" {
-                if let (Some(rid), Some(key)) = (remote_id, hf_key) {
-                    cancel_request(key, rid).await;
-                }
-            }
-        }
-
+    pub async fn cancel_job(&self, job_id: &str) {
         let token = self.tokens.lock().unwrap().remove(job_id);
         if let Some(t) = token {
             t.cancel();

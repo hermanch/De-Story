@@ -35,7 +35,7 @@ export function llmName(id: LlmProvider): string {
   return LLM_PROVIDERS.find((p) => p.id === id)?.name ?? id
 }
 
-/** Higgsfield image and video models live in ./higgsfield.ts, generated from the API docs. */
+// Image and video models live in ./higgsfield.ts (now Google Flow only).
 
 /**
  * Gemini 3.8 TTS Voice Library voices that ship with a sample in the app (assets/voices/<id>.mp3). Used

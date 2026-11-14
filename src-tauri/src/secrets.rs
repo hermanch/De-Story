@@ -9,7 +9,6 @@ use windows_sys::Win32::Security::Cryptography::{
 use serde::{Deserialize, Serialize};
 
 pub const PROVIDERS: &[&str] = &[
-    "higgsfield",
     "gemini",
     "elevenlabs",
     "openrouter",
@@ -20,7 +19,6 @@ pub const PROVIDERS: &[&str] = &[
 
 pub fn provider_name(p: &str) -> &'static str {
     match p {
-        "higgsfield" => "Higgsfield",
         "gemini" => "Google Gemini",
         "elevenlabs" => "ElevenLabs",
         "openrouter" => "OpenRouter",

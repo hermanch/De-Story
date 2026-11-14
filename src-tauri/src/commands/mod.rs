@@ -21,7 +21,7 @@ use crate::secrets::{
     GeminiKeyTestResult, KeyStatus, KeyTestResult,
 };
 use crate::services::audio::{probe_duration_ms, probe_size};
-use crate::services::{elevenlabs, gemini, generation, higgsfield as hf, llm, story};
+use crate::services::{elevenlabs, gemini, generation, llm, story};
 use crate::speech::narration::{generate_narration as run_narration, sync_captions as run_sync_captions};
 use crate::speech::whisper::{WhisperManager, WhisperStatus};
 
@@ -196,15 +196,10 @@ pub fn generate_sync_captions(
 
 #[tauri::command]
 pub async fn generate_cancel(
-    db: State<'_, DbPool>,
     job_mgr: State<'_, Arc<JobManager>>,
     job_id: String,
 ) -> Result<(), String> {
-    let hf_key = {
-        let conn = db.lock().unwrap();
-        get_secret(&conn, "higgsfield")
-    };
-    job_mgr.cancel_job(&job_id, hf_key.as_deref()).await;
+    job_mgr.cancel_job(&job_id).await;
     Ok(())
 }
 
@@ -638,9 +633,7 @@ async fn test_provider(
             get_secret(&conn, provider).unwrap_or_default()
         }
     };
-    if provider == "higgsfield" {
-        hf::test_credentials(&k).await
-    } else if provider == "elevenlabs" {
+    if provider == "elevenlabs" {
         elevenlabs::test_key(&k).await
     } else if provider == "gemini" {
         let results = test_gemini_pool(normalized_gemini_keys(&k)).await;
@@ -698,10 +691,6 @@ pub async fn settings_set_key(
         let conn = db.lock().unwrap();
         set_secret(&conn, &provider, &clean)?;
         let _ = drop_cache(&conn, &format!("models:{provider}"));
-    }
-
-    if provider == "higgsfield" {
-        generation::forget_estimates(&db);
     }
 
     let result = test_provider(&db, Some(&manager), &provider, Some(&clean)).await;
@@ -787,9 +776,6 @@ pub fn settings_clear_key(db: State<'_, DbPool>, provider: String) -> Result<(),
     let conn = db.lock().unwrap();
     clear_secret(&conn, &provider)?;
     let _ = drop_cache(&conn, &format!("models:{provider}"));
-    if provider == "higgsfield" {
-        let _ = drop_cache(&conn, "estimate:");
-    }
     if provider == "custom" {
         let _ = patch_settings(&conn, json!({ "customBaseUrl": "" }));
     }

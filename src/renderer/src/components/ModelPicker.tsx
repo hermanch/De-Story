@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
 import { ArrowDownNarrowWide, ChevronDown, RefreshCw, Search, X } from 'lucide-react'
 import type { ModelOption } from '@shared/types'
-import { creditLabel, relativeTime, usdLabel } from '../lib/format'
+import { relativeTime } from '../lib/format'
 import { Spinner, cx } from './ui'
 
 function ctxLabel(n?: number | null): string | null {
@@ -108,8 +108,7 @@ export function ModelPicker({
       .map(([t]) => t)
   }, [models, tagFilters])
 
-  // Higgsfield lists carry credit estimates (creditUnit marks them); known prices can be sorted cheapest first.
-  const priced = models.some((m) => m.credits != null)
+  const priced = false
 
   const filtered = useMemo(() => {
     const words = query.toLowerCase().split(/\s+/).filter(Boolean)
@@ -299,19 +298,7 @@ export function ModelPicker({
                   <span className="flex shrink-0 flex-col items-end gap-0.5 text-[11.5px] text-ink-2">
                     {ctxLabel(m.contextLength) && <span className="font-mono">{ctxLabel(m.contextLength)} konteks</span>}
                     {price && <span className={cx('font-mono', price === 'Gratis' && 'font-semibold text-ok-ink')}>{price}</span>}
-                    {m.creditUnit !== undefined &&
-                      (m.credits === undefined ? (
-                        <Spinner className="mt-1 size-3.5 text-muted" />
-                      ) : m.credits === null ? (
-                        <span className="text-muted" title="Higgsfield tidak memberi perkiraan untuk model ini">
-                          —
-                        </span>
-                      ) : (
-                        <>
-                          <span className="font-mono text-[12.5px] font-semibold text-ink">{creditLabel(m.credits)} kr</span>
-                          <span className="font-mono text-muted">{[m.creditUnit, m.usd != null && usdLabel(m.usd)].filter(Boolean).join(' · ')}</span>
-                        </>
-                      ))}
+
                   </span>
                 </button>
               )
